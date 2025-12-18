@@ -8,6 +8,10 @@ on:
   push:
     branches: ["main"]
 
+permissions:
+  contents: write
+    
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -24,14 +28,15 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.11.0
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install and Build
         run: |
           cd frontend
-          npm install --frozen-lockfile || npm install
+          npm cache clean --force
+          npm install --legacy-peer-deps
           npm run build
 
       # Runs a set of commands using the runners shell
