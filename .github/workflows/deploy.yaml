@@ -32,7 +32,6 @@ jobs:
         run: |
           cd frontend
           npm install --frozen-lockfile || npm install
-          npm install
           npm run build
 
       # Runs a set of commands using the runners shell
