@@ -23,7 +23,7 @@ jobs:
       - name: Install and Build
         run: |
           cd frontend
-          npm install
+          npm ci || npm install
           npm run build
 
       # Runs a set of commands using the runners shell
