@@ -38,7 +38,7 @@ jobs:
       # 4️⃣ Install dependencies verbosely
       - name: Install dependencies (verbose)
         working-directory: frontend
-        run: npm ci --include=dev --verbose
+        run: npm ci --include=dev --verbose --registry=https://registry.npmjs.org/
         env:
           NODE_ENV: development    # Ensure devDependencies are installed
 
