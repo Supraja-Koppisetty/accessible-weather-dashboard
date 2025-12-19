@@ -20,16 +20,15 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Clean install dependencies
         working-directory: frontend
-        run: npm install --legacy-peer-deps
+        run: npm ci
 
       - name: Build site
         working-directory: frontend
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
 
@@ -41,6 +40,5 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
