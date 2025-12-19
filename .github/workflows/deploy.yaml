@@ -63,9 +63,9 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Upload artifact for Pages
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: frontend/dist   # <- Make sure this is your Vite output folder
+          path: frontend/dist   
 
       - name: Publish to GitHub Pages
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
