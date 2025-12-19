@@ -36,10 +36,18 @@ jobs:
           npm cache clean --force
           npm install --legacy-peer-deps
           npm run build
-
-      # Runs a set of commands using the runners shell
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: frontend/dist # The folder the action should deploy.
-          branch: gh-pages # The branch the action should deploy to.
+          path: './frontend/dist'
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
