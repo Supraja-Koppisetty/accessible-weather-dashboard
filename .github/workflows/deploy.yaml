@@ -22,7 +22,8 @@ jobs:
 
       - name: Clean install dependencies
         working-directory: frontend
-        run: npm ci
+        run: npm ci --include=dev
+       
 
       - name: Build site
         working-directory: frontend
