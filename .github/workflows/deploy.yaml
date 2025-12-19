@@ -1,7 +1,7 @@
 name: CI Debug Vite
 
 on:
-  workflow_dispatch:    # Allows manual trigger from GitHub UI
+  workflow_dispatch:
   push:
     branches: ["main"]
 
@@ -35,24 +35,37 @@ jobs:
           which node
           which npm
           
+      # 4️⃣ Force public npm registry
       - name: Force public npm registry
         working-directory: frontend
         run: |
           echo "registry=https://registry.npmjs.org/" > .npmrc     
 
-      # 4️⃣ Install dependencies verbosely
+      # 5️⃣ Install dependencies (verbose)
       - name: Install dependencies (verbose)
         working-directory: frontend
         run: npm ci --include=dev --verbose 
         env:
-          NODE_ENV: development    # Ensure devDependencies are installed
+          NODE_ENV: development
 
-      # 5️⃣ List node_modules/.bin
+      # 6️⃣ List node_modules/.bin
       - name: List node_modules/.bin
         working-directory: frontend
         run: ls -la node_modules/.bin
 
-      # 6️⃣ Build site verbosely
+      # 7️⃣ Build site verbosely
       - name: Build site (verbose)
         working-directory: frontend
         run: npm run build --verbose
+
+      # 8️⃣ Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: frontend/dist   # <- Make sure this is your Vite output folder
+
+      - name: Publish to GitHub Pages
+        uses: actions/deploy-pages@v1
