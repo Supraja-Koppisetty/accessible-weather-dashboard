@@ -33,8 +33,7 @@ jobs:
       - name: Install and Build
         run: |
           cd frontend
-          npm cache clean --force
-          npm install --legacy-peer-deps
+          npm ci --legacy-peer-deps
           npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
