@@ -1,6 +1,7 @@
-name: CI
+name: CI Debug Vite
 
 on:
+  workflow_dispatch:    # Allows manual trigger from GitHub UI
   push:
     branches: ["main"]
 
@@ -10,35 +11,48 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  debug-build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout code
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # 2️⃣ Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Clean install dependencies
+      # 3️⃣ Show environment info
+      - name: Show Node and npm info
         working-directory: frontend
-        run: npm ci
-
-      - name: Build site
+        run: |
+          node -v
+          npm -v
+          echo "NODE_ENV=$NODE_ENV"
+          which node
+          which npm
+          
+      - name: Force public npm registry
         working-directory: frontend
-        run: npm run build
+        run: |
+          echo "registry=https://registry.npmjs.org/" > .npmrc     
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: frontend/dist
+      # 4️⃣ Install dependencies verbosely
+      - name: Install dependencies (verbose)
+        working-directory: frontend
+        run: npm ci --include=dev --verbose 
+        env:
+          NODE_ENV: development    # Ensure devDependencies are installed
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # 5️⃣ List node_modules/.bin
+      - name: List node_modules/.bin
+        working-directory: frontend
+        run: ls -la node_modules/.bin
 
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # 6️⃣ Build site verbosely
+      - name: Build site (verbose)
+        working-directory: frontend
+        run: npm run build --verbose
