@@ -34,11 +34,16 @@ jobs:
           echo "NODE_ENV=$NODE_ENV"
           which node
           which npm
+          
+      - name: Force public npm registry
+        working-directory: frontend
+        run: |
+          echo "registry=https://registry.npmjs.org/" > .npmrc     
 
       # 4️⃣ Install dependencies verbosely
       - name: Install dependencies (verbose)
         working-directory: frontend
-        run: npm ci --include=dev --verbose --registry=https://registry.npmjs.org/
+        run: npm ci --include=dev --verbose 
         env:
           NODE_ENV: development    # Ensure devDependencies are installed
 
