@@ -4,7 +4,7 @@ import WeatherCard from "./components/WeatherCard";
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  // const [isDarkMode, setIsDarkMode] = useState(true);
 
   const getTemperaturePrediction = async (data) => {
     const response = await fetch(`${BACKEND_URL}/predict`, {
@@ -53,12 +53,12 @@ function App() {
       }
     >
       <header>
-        <button
+        {/* <button
           className="toggle-btn ml-0 mb-4 px-4 py-2 bg-(--color-accent) rounded-lg text-white hover:bg-[#6b6899] transition-colors shadow-md"
           onClick={() => setIsDarkMode(!isDarkMode)}
         >
           {isDarkMode ? "Dark Mode" : "Light Mode"}
-        </button>
+        </button> */}
       </header>
       <main>
         <div className="weather-app flex flex-col items-center justify-center gap-4">
