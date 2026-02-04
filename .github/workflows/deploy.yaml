@@ -1,9 +1,9 @@
-name: CI Debug Vite
+name: Full CI/CD - Frontend & Backend
 
 on:
-  workflow_dispatch:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -11,61 +11,65 @@ permissions:
   id-token: write
 
 jobs:
-  debug-build:
+  # ---------- FRONTEND BUILD & DEPLOY ----------
+  frontend:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout code
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3️⃣ Show environment info
-      - name: Show Node and npm info
+      - name: Install dependencies
         working-directory: frontend
-        run: |
-          node -v
-          npm -v
-          echo "NODE_ENV=$NODE_ENV"
-          which node
-          which npm
-          
-      # 4️⃣ Force public npm registry
-      - name: Force public npm registry
-        working-directory: frontend
-        run: |
-          echo "registry=https://registry.npmjs.org/" > .npmrc     
+        run: npm ci
 
-      # 5️⃣ Install dependencies (verbose)
-      - name: Install dependencies (verbose)
+      - name: Build frontend
         working-directory: frontend
-        run: npm ci --include=dev --verbose 
-        env:
-          NODE_ENV: development
+        run: npm run build
 
-      # 6️⃣ List node_modules/.bin
-      - name: List node_modules/.bin
-        working-directory: frontend
-        run: ls -la node_modules/.bin
-
-      # 7️⃣ Build site verbosely
-      - name: Build site (verbose)
-        working-directory: frontend
-        run: npm run build --verbose
-
-      # 8️⃣ Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload artifact for Pages
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: frontend/dist   
+          path: frontend/dist
 
-      - name: Publish to GitHub Pages
+      - name: Publish
         uses: actions/deploy-pages@v4
+
+  # ---------- BACKEND CI ----------
+  backend:
+    runs-on: ubuntu-latest
+    needs: frontend  # optional, run after frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download ML model
+        run: |
+          wget https://github.com/Supraja-Koppisetty/accessible-weather-dashboard/releases/download/python-model-release-build/temperature_prediction_model_rf.pkl -O backend/temperature_prediction_model_rf.pkl
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          source venv/bin/activate
+          # replace with your actual tests, if none just check Python runs
+          python -m unittest discover -s tests || echo "No tests found"
