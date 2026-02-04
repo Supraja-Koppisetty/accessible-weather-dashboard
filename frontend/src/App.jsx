@@ -27,7 +27,6 @@ function App() {
     try {
       const response = await fetch(weatherAPI_endPoint);
       const data = await response.json();
-      console.log("Weather data", data);
       if (data.cod === 200) {
         setWeather(data);
         // call predictTemperature using ML model

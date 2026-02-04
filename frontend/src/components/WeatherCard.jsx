@@ -18,7 +18,7 @@ function WeatherCard({ weather }) {
       <h2>
         {weather.name}, {weather.sys.country}
       </h2>
-      <p>Temperature: {weather.main.temp - 273.15} °C</p>
+      <p>Temperature: {Math.round(weather.main.temp - 273.15, 2)} °C</p>
       <p>Humidity: {weather.main.humidity}%</p>
       <p>Wind Speed: {weather.wind.speed} m/s</p>
       <p>Weather: {weather.weather[0].description}</p>
