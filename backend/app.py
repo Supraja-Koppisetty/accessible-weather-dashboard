@@ -7,7 +7,7 @@ import numpy as np
 # Initialize Flask app
 app = Flask(__name__)
 
-CORS(app,origins=["http://localhost:5173"])
+CORS(app,origins=["https://supraja-koppisetty.github.io"])
 
 # Load the pre-trained model
 model = joblib.load('temperature_prediction_model_rf.pkl')
