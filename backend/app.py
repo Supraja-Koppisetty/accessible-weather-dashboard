@@ -29,7 +29,7 @@ def predict():
     prediction = model.predict(input_features)
 
     # Return the prediction as JSON
-    return jsonify({'predicted_temperature': prediction[0]})
+    return jsonify({'predicted_temperature': round(prediction[0],2)})
 
 # Run the Flask app
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 import { useState } from "react";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import WeatherCard from "./components/WeatherCard";
 function App() {
   const [city, setCity] = useState("");
@@ -6,7 +7,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const getTemperaturePrediction = async (data) => {
-    const response = await fetch("http://127.0.0.1:5000/predict", {
+    const response = await fetch(`${BACKEND_URL}/predict`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
